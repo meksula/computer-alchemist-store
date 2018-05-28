@@ -3,6 +3,8 @@ package com.computeralchemist.store.repository;
 import com.computeralchemist.store.domain.store.Store;
 import org.springframework.data.repository.CrudRepository;
 
+import java.util.Optional;
+
 /**
  * @Author
  * Karol Meksuła
@@ -10,4 +12,5 @@ import org.springframework.data.repository.CrudRepository;
  * */
 
 public interface StoreRepository extends CrudRepository<Store, Long> {
+    Optional<Store> findByStoreName(String storeName);
 }

@@ -71,4 +71,10 @@ public class StoreRepositoryTest {
         assertEquals(DESCRIPTION, storeFound.getDescription());
     }
 
+    @Test
+    public void findByStoreNameTest() {
+        Optional<Store> found = storeRepository.findByStoreName(STORE_NAME);
+        assertTrue(found.isPresent());
+    }
+
 }

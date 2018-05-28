@@ -6,6 +6,7 @@ import com.computeralchemist.store.domain.store.StoreValidator;
 import com.computeralchemist.store.repository.StoreRepository;
 import org.springframework.data.rest.webmvc.ResourceNotFoundException;
 import org.springframework.http.HttpStatus;
+import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
 /**
@@ -35,6 +36,12 @@ public class StoreController {
     @ResponseStatus(HttpStatus.OK)
     public Store findStore(@PathVariable("storeId") long storeId) {
        return storeRepository.findById(storeId).orElseThrow(ResourceNotFoundException::new);
+    }
+
+    @DeleteMapping(path = "/{storeId}")
+    public ResponseEntity<?> removeStore(@PathVariable("storeId") long storeId) {
+        storeRepository.deleteById(storeId);
+        return new ResponseEntity<>(HttpStatus.OK);
     }
 
 }
