@@ -1,11 +1,9 @@
 package com.computeralchemist.store.repository;
 
-import com.computeralchemist.store.domain.store.order.ComponentType;
+import com.computeralchemist.store.domain.store.components.ComponentType;
 import com.computeralchemist.store.domain.store.order.Offered;
 import lombok.extern.slf4j.Slf4j;
-import org.junit.BeforeClass;
-import org.junit.FixMethodOrder;
-import org.junit.Test;
+import org.junit.*;
 import org.junit.runner.RunWith;
 import org.junit.runners.MethodSorters;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -31,6 +29,7 @@ import static org.junit.Assert.*;
 @RunWith(SpringRunner.class)
 public class OfferedRepositoryTest {
     private static Offered offered;
+    private static OfferedRepository offeredRepositorySt;
 
     @Autowired
     private OfferedRepository repository;
@@ -41,8 +40,8 @@ public class OfferedRepositoryTest {
     private static final BigDecimal PRICE = BigDecimal.valueOf(459.39);
     private static final int PIECES = 10;
 
-    @BeforeClass
-    public static void setUp() {
+
+    public static void initOffered() {
         offered = new Offered();
         offered.setComponentType(ComponentType.valueOf(COMPONENT_TYPE));
         offered.setStoreName(STORE_NAME);
@@ -51,8 +50,15 @@ public class OfferedRepositoryTest {
         offered.setProductsInStock(PIECES);
     }
 
+    @Before
+    public void setUpRepository() {
+        offeredRepositorySt = repository;
+    }
+
     @Test
     public void entityShouldBeCorrectlyInsertToDatabaseAndFindById() {
+        initOffered();
+
         Offered offeredSaved = repository.save(offered);
         assertNotNull(offeredSaved);
 
@@ -74,6 +80,9 @@ public class OfferedRepositoryTest {
 
     @Test
     public void findAllByComponentTypeTest() {
+        initOffered();
+        repository.save(offered);
+
         Optional<List<Offered>> offeredList = repository.findAllByComponentType(ComponentType.motherboard);
         assertEquals(1, offeredList.get().size());
     }
@@ -98,14 +107,28 @@ public class OfferedRepositoryTest {
         repository.save(offered3);
 
         Optional<List<Offered>> offeredList = repository.findAllByStoreName(STORE_NAME);
-        assertEquals(3, offeredList.get().size());
+        assertEquals(2, offeredList.get().size());
     }
 
     @Test
     public void removeProductTest() {
-        repository.deleteById(2L);
+        initOffered();
 
-        Optional<Offered> found = repository.findById(2L);
+        repository.save(offered);
+        repository.deleteById(offered.getId());
+
+        Optional<Offered> found = repository.findById(offered.getId());
         assertFalse(found.isPresent());
     }
+
+    @After
+    public void cleanEachTest() {
+        repository.deleteAll();
+    }
+
+    @AfterClass
+    public static void cleanUp() {
+        offeredRepositorySt.deleteAll();
+    }
+
 }

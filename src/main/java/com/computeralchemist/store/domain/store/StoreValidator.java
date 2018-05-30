@@ -1,14 +1,23 @@
 package com.computeralchemist.store.domain.store;
 
+import com.computeralchemist.store.repository.StoreRepository;
+import org.springframework.stereotype.Service;
+
 /**
  * @Author
  * Karol Meksuła
  * 25-05-2018
  * */
 
+@Service
 public class StoreValidator {
+    private StoreRepository storeRepository;
     private Store store;
     private boolean[] results = new boolean[8];
+
+    public StoreValidator(StoreRepository storeRepository) {
+        this.storeRepository = storeRepository;
+    }
 
     public boolean validateStore(Store store) {
         this.store = store;
@@ -27,6 +36,10 @@ public class StoreValidator {
         }
 
         return checkTable();
+    }
+
+    public boolean isStoreExist(String storeName) {
+        return storeRepository.findByStoreName(storeName).isPresent();
     }
 
     private boolean checkStoreId() {

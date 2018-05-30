@@ -1,6 +1,9 @@
 package com.computeralchemist.store.controller;
 
 import com.computeralchemist.store.domain.store.Store;
+import com.computeralchemist.store.domain.store.order.Cart;
+import com.computeralchemist.store.domain.store.order.Order;
+import com.computeralchemist.store.repository.OrderRepository;
 import com.computeralchemist.store.repository.StoreRepository;
 import com.fasterxml.jackson.core.JsonProcessingException;
 import com.fasterxml.jackson.databind.ObjectMapper;
@@ -23,30 +26,30 @@ import org.springframework.web.context.WebApplicationContext;
 
 import java.nio.charset.Charset;
 import java.util.Arrays;
+import java.util.HashSet;
 
-import static org.junit.Assert.*;
+import static org.hamcrest.Matchers.hasSize;
+import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.get;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.post;
 import static org.springframework.test.web.servlet.result.MockMvcResultHandlers.print;
+import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.jsonPath;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.status;
 
 /**
  * @Author
  * Karol Meksuła
- * 25-05-2018
+ * 29-05-2018
  * */
 
 @FixMethodOrder(value = MethodSorters.JVM)
 @SpringBootTest
 @RunWith(SpringRunner.class)
 @WebAppConfiguration
-public class StoreControllerTest {
+public class OrderControllerTest {
     private MockMvc mockMvc;
 
     @Autowired
     private WebApplicationContext context;
-
-    @Autowired
-    private StoreRepository storeRepository;
 
     private MediaType mediaType = new MediaType(MediaType.APPLICATION_JSON_UTF8.getType(),
             MediaType.APPLICATION_JSON.getSubtype(), Charset.forName("utf8"));
@@ -61,37 +64,25 @@ public class StoreControllerTest {
                 .orElse(null);
     }
 
+    private final long STORE_ID = 5069;
+    private static final String STORE_NAME = "Computer from Heaven";
+    private final long CUSTOMER_ID = 38294;
+    private final String CUSTOMER_USERNAME = "niko_kopernik1492";
+
     private final long USER_ID = 3432;
     private final String USERNAME = "heaven_comp83";
-    private final String STORE_NAME = "Computer's of Heavens";
     private final String STORE_EMAIL = "heaven_comp@gmail.com";
     private final String PHONE = "2432-3344-22";
-    private final String ACCOUNT = "00000000000000000000000000";
+    private final String ACCOUNT = "22843722334234444499330344";
     private final String DESCRIPTION = "Our computers store is here from heaven to happy all people in the world.";
+
+    private Store store;
 
     @Before
     public void setUp() {
         mockMvc = MockMvcBuilders.webAppContextSetup(context).build();
-    }
 
-    @Test
-    public void instantiateTest() {
-        assertNotNull(context);
-        assertNotNull(mockMvc);
-    }
-
-    @Test
-    public void storeShouldBeCreatedTest() throws Exception {
-        mockMvc.perform(post("/store")
-                .accept(mediaType)
-                .contentType(mediaType)
-                .content(parseCorrectStoreToJson()))
-                .andDo(print())
-                .andExpect(status().isCreated());
-    }
-
-    private String parseCorrectStoreToJson() throws JsonProcessingException {
-        Store store = new Store();
+        store = new Store();
         store.setUserId(USER_ID);
         store.setUsername(USERNAME);
         store.setStoreEmail(STORE_EMAIL);
@@ -99,40 +90,63 @@ public class StoreControllerTest {
         store.setPhoneNumber(PHONE);
         store.setAccountNumber(ACCOUNT);
         store.setDescription(DESCRIPTION);
+    }
 
-        ObjectMapper objectMapper = new ObjectMapper();
-        return objectMapper.writeValueAsString(store);
+    @Autowired
+    private StoreRepository storeRepository;
+
+    @Autowired
+    private OrderRepository orderRepository;
+
+    @Test
+    public void makeOrderTest() throws Exception {
+        storeRepository.save(store);
+
+        mockMvc.perform(post("/store/order/" + STORE_NAME)
+                .accept(mediaType)
+                .contentType(mediaType)
+                .content(orderJson()))
+                .andDo(print())
+                .andExpect(status().isCreated());
+    }
+
+    private String orderJson() throws JsonProcessingException {
+        Cart cart = new Cart();
+        cart.setCustomerUserId(CUSTOMER_ID);
+        cart.setCustomerUsername(CUSTOMER_USERNAME);
+        cart.setStoreId(STORE_ID);
+        cart.setStoreName(STORE_NAME);
+        cart.setProductInCart(new HashSet<>());
+
+        return new ObjectMapper().writeValueAsString(cart);
     }
 
     @Test
-    public void storeShouldNotBeCreated_badPropertiesTest() throws Exception {
-        mockMvc.perform(post("/store")
+    public void showListOfAllOrdersOfMyStore() throws Exception {
+        saveOrder();
+
+        mockMvc.perform(get("/store/order/" + STORE_NAME)
                 .accept(mediaType)
-                .contentType(mediaType)
-                .content(parseInvalidStoreToJson()))
+                .contentType(mediaType))
                 .andDo(print())
-                .andExpect(status().is4xxClientError());
+                .andExpect(status().isOk())
+                .andExpect(jsonPath("$", hasSize(1)));
     }
 
-    private String parseInvalidStoreToJson() throws JsonProcessingException {
-        Store store = new Store();
-        ObjectMapper objectMapper = new ObjectMapper();
-        return objectMapper.writeValueAsString(store);
+    private void saveOrder() {
+        Order order = new Order();
+        order.setCustomersId(CUSTOMER_ID);
+        order.setCustomersUsername(CUSTOMER_USERNAME);
+        order.setStoreId(STORE_ID);
+        order.setStoreName(STORE_NAME);
+        order.setProductList(new HashSet<>());
+
+        orderRepository.save(order);
     }
 
     @After
     public void cleanUp() {
-        storeRepository.deleteAll();
+        orderRepository.deleteAll();
     }
 
 }
-
-
-
-
-
-
-
-
-
-

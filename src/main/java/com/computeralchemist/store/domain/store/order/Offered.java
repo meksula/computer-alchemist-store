@@ -1,5 +1,8 @@
 package com.computeralchemist.store.domain.store.order;
 
+import com.computeralchemist.store.domain.store.ValidPrice;
+import com.computeralchemist.store.domain.store.components.ComponentType;
+import com.computeralchemist.store.domain.store.components.ComputerComponent;
 import com.fasterxml.jackson.annotation.JsonAutoDetect;
 import lombok.Getter;
 import lombok.Setter;
@@ -39,4 +42,10 @@ public class Offered {
 
     private int productsInStock;
 
+    @Transient
+    private ComputerComponent computerComponent;
+
+    public void setPrice(BigDecimal bigDecimal) {
+        this.price = ValidPrice.valid(bigDecimal);
+    }
 }

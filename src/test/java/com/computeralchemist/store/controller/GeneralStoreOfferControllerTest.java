@@ -1,13 +1,10 @@
 package com.computeralchemist.store.controller;
 
-import com.computeralchemist.store.domain.store.order.ComponentType;
+import com.computeralchemist.store.domain.store.components.ComponentType;
 import com.computeralchemist.store.domain.store.order.Offered;
 import com.computeralchemist.store.repository.OfferedRepository;
 import lombok.extern.slf4j.Slf4j;
-import org.junit.After;
-import org.junit.Before;
-import org.junit.FixMethodOrder;
-import org.junit.Test;
+import org.junit.*;
 import org.junit.runner.RunWith;
 import org.junit.runners.MethodSorters;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -25,7 +22,6 @@ import java.nio.charset.Charset;
 import java.util.Arrays;
 
 import static org.hamcrest.Matchers.hasSize;
-import static org.junit.Assert.*;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.get;
 import static org.springframework.test.web.servlet.result.MockMvcResultHandlers.print;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.jsonPath;
@@ -42,6 +38,7 @@ import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.
 @RunWith(SpringRunner.class)
 public class GeneralStoreOfferControllerTest {
     private MockMvc mockMvc;
+    private static OfferedRepository offeredRepositorySt;
 
     @Autowired
     private OfferedRepository offeredRepository;
@@ -64,6 +61,8 @@ public class GeneralStoreOfferControllerTest {
 
     @Before
     public void setUp() {
+        offeredRepositorySt = offeredRepository;
+
         mockMvc = MockMvcBuilders.webAppContextSetup(context).build();
     }
 
@@ -109,9 +108,9 @@ public class GeneralStoreOfferControllerTest {
         }
     }
 
-    @After
-    public void cleanUp() {
-
+    @AfterClass
+    public static void cleanUp() {
+        offeredRepositorySt.deleteAll();
     }
 
 }

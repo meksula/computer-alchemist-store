@@ -1,6 +1,6 @@
 package com.computeralchemist.store.controller;
 
-import com.computeralchemist.store.domain.store.order.ComponentType;
+import com.computeralchemist.store.domain.store.components.ComponentType;
 import com.computeralchemist.store.domain.store.order.Offered;
 import com.computeralchemist.store.repository.OfferedRepository;
 import org.springframework.dao.EmptyResultDataAccessException;

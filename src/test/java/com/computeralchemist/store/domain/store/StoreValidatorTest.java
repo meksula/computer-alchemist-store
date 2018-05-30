@@ -2,6 +2,10 @@ package com.computeralchemist.store.domain.store;
 
 import org.junit.Before;
 import org.junit.Test;
+import org.junit.runner.RunWith;
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.boot.test.context.SpringBootTest;
+import org.springframework.test.context.junit4.SpringRunner;
 
 import static org.junit.Assert.*;
 
@@ -11,6 +15,8 @@ import static org.junit.Assert.*;
  * 25-05-2018
  * */
 
+@SpringBootTest
+@RunWith(SpringRunner.class)
 public class StoreValidatorTest {
     /**
      * Valid values
@@ -31,14 +37,14 @@ public class StoreValidatorTest {
 
 
     private Store store;
+
+    @Autowired
     private StoreValidator storeValidator;
 
     @Before
     public void setUp() {
-        storeValidator = new StoreValidator();
-
         store = new Store();
-        store.setStoreId(STORE_ID);
+
         store.setUserId(USER_ID);
         store.setUsername(USERNAME);
         store.setStoreEmail(STORE_EMAIL);

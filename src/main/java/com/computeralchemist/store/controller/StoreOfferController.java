@@ -1,13 +1,17 @@
 package com.computeralchemist.store.controller;
 
 import com.computeralchemist.store.domain.store.InvalidStoreData;
+import com.computeralchemist.store.domain.store.components.ComputerComponent;
+import com.computeralchemist.store.domain.store.components.cpu.Cpu;
 import com.computeralchemist.store.domain.store.order.Offered;
 import com.computeralchemist.store.repository.OfferedRepository;
 import com.computeralchemist.store.repository.StoreRepository;
 import org.springframework.dao.EmptyResultDataAccessException;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
+import org.springframework.http.client.support.BasicAuthorizationInterceptor;
 import org.springframework.web.bind.annotation.*;
+import org.springframework.web.client.RestTemplate;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -54,10 +58,24 @@ public class StoreOfferController {
     public Offered getOfferedProduct(@PathVariable("id") Long id) {
         Optional<Offered> found = offeredRepository.findById(id);
 
-        if (found.isPresent())
-            return found.get();
+        Offered offered;
+        ResponseEntity<Cpu> computerComponent;
+
+        if (found.isPresent()) {
+            offered = found.get();
+        }
 
         else throw new EmptyResultDataAccessException(Math.toIntExact(id));
+
+        RestTemplate restTemplate = new RestTemplate();
+        restTemplate.getInterceptors().add(new BasicAuthorizationInterceptor("karoladmin", "karoladmin"));
+        computerComponent = restTemplate.getForEntity("http://localhost:8080/components/"
+                + offered.getComponentType().toString() + "/"
+                + String.valueOf(offered.getProductId()), Cpu.class);
+
+        offered.setComputerComponent(computerComponent.getBody());
+
+        return offered;
     }
 
     @GetMapping(value = "/offered")

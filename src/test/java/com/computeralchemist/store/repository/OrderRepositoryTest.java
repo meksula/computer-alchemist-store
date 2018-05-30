@@ -1,22 +1,15 @@
 package com.computeralchemist.store.repository;
 
-import com.computeralchemist.store.domain.store.order.ComponentType;
-import com.computeralchemist.store.domain.store.order.Offered;
 import com.computeralchemist.store.domain.store.order.Order;
-import com.computeralchemist.store.domain.store.order.OrderedProductMetadata;
+import com.computeralchemist.store.domain.store.order.OrderedProduct;
 import lombok.extern.slf4j.Slf4j;
-import org.junit.Before;
-import org.junit.FixMethodOrder;
-import org.junit.Test;
+import org.junit.*;
 import org.junit.runner.RunWith;
 import org.junit.runners.MethodSorters;
-import org.mockito.Mockito;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.test.context.junit4.SpringRunner;
 
-import javax.persistence.Table;
-import java.math.BigDecimal;
 import java.util.*;
 
 import static org.junit.Assert.*;
@@ -32,53 +25,59 @@ import static org.junit.Assert.*;
 @SpringBootTest
 @RunWith(SpringRunner.class)
 public class OrderRepositoryTest {
+    private static OrderRepository orderRepositorySt;
+    private static OrderedProductRepository orderedProductRepositorySt;
 
     @Autowired
     private OrderRepository orderRepository;
 
     @Autowired
-    private ProductMetadataRepository metadataRepository;
+    private OrderedProductRepository metadataRepository;
 
     private final long CUSTOMER_ID = 3424;
     private final String CUSTOMER_USERNAME = "Mikolaj_Kopernik1492";
     private final long STORE_ID = 4533;
     private final String STORE_NAME = "Computer Alchemist Official";
-    private final ComponentType TYPE = ComponentType.cpu;
-    private final long PRODUCT_ID = 19394;
 
-    private static final String COMPONENT_TYPE_OFFERED = "motherboard";
-    private static final String STORE_NAME_OFFERED = "Computer-alchemist-official";
-    private static final long PRODUCT_ID_OFFERED = 32516;
-    private static final BigDecimal PRICE = BigDecimal.valueOf(459.39);
-    private static final int PIECES = 10;
+    @Before
+    public void setUp() {
+        orderRepositorySt = orderRepository;
+        orderedProductRepositorySt = metadataRepository;
+    }
+
+    private Order order;
+    private static long assignedId;
 
     @Test
-    public void saveOrderTest() {
+    public void findOrderTest() {
+        saveOrder();
+        saveProductMetadata();
+
+        Optional<Order> order = orderRepository.findById(assignedId);
+        Order order1 = order.get();
+
+        assertEquals(2, order1.getProductList().size());
+    }
+
+    private void saveOrder() {
         Order order = new Order();
-        order.setComponentType(TYPE);
         order.setCustomersId(CUSTOMER_ID);
         order.setCustomersUsername(CUSTOMER_USERNAME);
         order.setStoreId(STORE_ID);
         order.setStoreName(STORE_NAME);
-        order.setComponentType(TYPE);
-        order.setProductId(PRODUCT_ID);
 
-        orderRepository.save(order);
+        Order order1 = orderRepository.save(order);
+        assignedId = order1.getOrderId();
     }
 
-    @Test
-    public void saveProductMetaDataTest() {
-        Optional<Order> optional = orderRepository.findById(1L);
+    private void saveProductMetadata() {
+        Optional<Order> optional = orderRepository.findById(assignedId);
         Order order = optional.get();
 
-        OrderedProductMetadata cpu = new OrderedProductMetadata();
-        cpu.setComponentType("cpu");
-        cpu.setProductId(344);
+        OrderedProduct cpu = new OrderedProduct();
         cpu.setOrder(order);
 
-        OrderedProductMetadata productMetadata = new OrderedProductMetadata();
-        productMetadata.setComponentType("motherboard");
-        productMetadata.setProductId(2484);
+        OrderedProduct productMetadata = new OrderedProduct();
         productMetadata.setOrder(order);
 
         metadataRepository.save(cpu);
@@ -86,23 +85,69 @@ public class OrderRepositoryTest {
 
     }
 
-    private Set<OrderedProductMetadata> prepareOfeeredSet() {
-        Set<OrderedProductMetadata> offeredSet = new HashSet<>();
+    @Test
+    public void makeOrderWithProducts() {
+        order = new Order();
+        order.setCustomersId(CUSTOMER_ID);
+        order.setCustomersUsername(CUSTOMER_USERNAME);
+        order.setStoreId(STORE_ID);
+        order.setStoreName(STORE_NAME);
+        order.setProductList(provideSet());
 
-        OrderedProductMetadata productMetadata = new OrderedProductMetadata();
-        productMetadata.setComponentType("cpu");
-        productMetadata.setProductId(344);
+        Order optionalOrder = orderRepository.save(order);
+        assertNotNull(optionalOrder);
+    }
 
-        offeredSet.add(productMetadata);
-        return offeredSet;
+    private Set<OrderedProduct> provideSet() {
+        OrderedProduct cpu = new OrderedProduct();
+        cpu.setUserIdPlacingOrder(74322);
+        cpu.setUsernamePlacingOrder("adi283");
+        cpu.setOfferedId(3);
+        cpu.setOrder(order);
+
+        OrderedProduct motherboard = new OrderedProduct();
+        motherboard.setUserIdPlacingOrder(74322);
+        motherboard.setUsernamePlacingOrder("adi283");
+        motherboard.setOfferedId(53);
+        motherboard.setOrder(order);
+
+        Set<OrderedProduct> set = new HashSet<>();
+        set.add(cpu);
+        set.add(motherboard);
+
+        return set;
     }
 
     @Test
-    public void findOrderTest() {
-        Optional<Order> order = orderRepository.findById(1L);
-        Order order1 = order.get();
+    public void saveOrderWithoutProducts() {
+        Order order2 = new Order();
+        order2.setCustomersId(CUSTOMER_ID);
+        order2.setCustomersUsername(CUSTOMER_USERNAME);
+        order2.setStoreId(STORE_ID);
+        order2.setStoreName(STORE_NAME);
 
-        assertEquals(2, order1.getProductList().size());
+        orderRepository.save(order2);
+    }
+
+    @Test
+    public void findAllByStoreNameTest() {
+        saveOrder();
+
+        Optional<List<Order>> optionalList = orderRepository.findAllByStoreName(STORE_NAME);
+        assertTrue(optionalList.isPresent());
+        assertEquals(1, optionalList.get().size());
+    }
+
+    @After
+    public void cleanEachTest() {
+        orderRepository.deleteAll();
+        metadataRepository.deleteAll();
+    }
+
+    @AfterClass
+    public static void cleanUp() {
+        orderRepositorySt.deleteAll();
+        orderedProductRepositorySt.deleteAll();
     }
 
 }

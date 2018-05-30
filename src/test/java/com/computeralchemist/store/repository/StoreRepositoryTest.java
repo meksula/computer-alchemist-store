@@ -1,9 +1,7 @@
 package com.computeralchemist.store.repository;
 
 import com.computeralchemist.store.domain.store.Store;
-import org.junit.Before;
-import org.junit.FixMethodOrder;
-import org.junit.Test;
+import org.junit.*;
 import org.junit.runner.RunWith;
 import org.junit.runners.MethodSorters;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -24,6 +22,7 @@ import static org.junit.Assert.*;
 @RunWith(SpringRunner.class)
 @FixMethodOrder(value = MethodSorters.JVM)
 public class StoreRepositoryTest {
+    private static StoreRepository storeRepositorySt;
 
     @Autowired
     private StoreRepository storeRepository;
@@ -36,10 +35,12 @@ public class StoreRepositoryTest {
     private final String ACCOUNT = "22843722334234444499330344";
     private final String DESCRIPTION = "Our computers store is here from heaven to happy all people in the world.";
 
-    private Store store;
+    private static Store store;
 
     @Before
     public void setUp() {
+        storeRepositorySt = storeRepository;
+
         store = new Store();
         store.setUserId(USER_ID);
         store.setUsername(USERNAME);
@@ -54,12 +55,14 @@ public class StoreRepositoryTest {
     public void saveEntityTest() {
         Store justSaved = storeRepository.save(store);
         assertNotNull(justSaved);
-        assertEquals(1, justSaved.getStoreId());
+        assertEquals(USERNAME, justSaved.getUsername());
     }
 
     @Test
     public void findEntityByIdTest() {
-        Optional<Store> found = storeRepository.findById(1L);
+        storeRepository.save(store);
+
+        Optional<Store> found = storeRepository.findById(store.getStoreId());
         Store storeFound = found.get();
 
         assertEquals(USER_ID, storeFound.getUserId());
@@ -73,8 +76,20 @@ public class StoreRepositoryTest {
 
     @Test
     public void findByStoreNameTest() {
+        storeRepository.save(store);
+
         Optional<Store> found = storeRepository.findByStoreName(STORE_NAME);
         assertTrue(found.isPresent());
+    }
+
+    @After
+    public void cleanAfterEachTest() {
+        storeRepository.deleteAll();
+    }
+
+    @AfterClass
+    public static void cleanUp() {
+        storeRepositorySt.deleteAll();
     }
 
 }

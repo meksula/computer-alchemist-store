@@ -37,12 +37,11 @@ public class Order {
     @NotNull
     private String storeName;
 
-    @NotNull
-    private ComponentType componentType;
 
-    @NotNull
-    private long productId;
+
+    @Transient
+    private String realizeDate;
 
     @OneToMany(fetch = FetchType.EAGER, mappedBy = "order", cascade = CascadeType.ALL)
-    private Set<OrderedProductMetadata> productList;
+    private Set<OrderedProduct> productList;
 }

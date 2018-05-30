@@ -19,15 +19,18 @@ import org.springframework.web.bind.annotation.*;
 @RequestMapping(path = "/store")
 public class StoreController {
     private StoreRepository storeRepository;
+    private StoreValidator storeValidator;
 
-    public StoreController(StoreRepository storeRepository) {
+    public StoreController(StoreRepository storeRepository,
+                           StoreValidator storeValidator) {
         this.storeRepository = storeRepository;
+        this.storeValidator = storeValidator;
     }
 
     @PostMapping
     @ResponseStatus(HttpStatus.CREATED)
     public Store createNewStore(@RequestBody Store store) {
-        if (new StoreValidator().validateStore(store))
+        if (storeValidator.validateStore(store))
             return storeRepository.save(store);
         else throw new InvalidStoreData();
     }

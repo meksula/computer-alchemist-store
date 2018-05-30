@@ -1,4 +1,4 @@
-package com.computeralchemist.store.domain.store.order;
+package com.computeralchemist.store.domain.store.components;
 
 /**
  * @Author
