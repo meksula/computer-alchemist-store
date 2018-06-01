@@ -1,9 +1,9 @@
 package com.computeralchemist.store.controller;
 
-import com.computeralchemist.store.domain.store.StoreValidator;
-import com.computeralchemist.store.domain.store.order.Cart;
-import com.computeralchemist.store.domain.store.order.Order;
-import com.computeralchemist.store.domain.store.order.OrderCreator;
+import com.computeralchemist.store.domain.Store;
+import com.computeralchemist.store.domain.StoreValidator;
+import com.computeralchemist.store.domain.order.*;
+import com.computeralchemist.store.domain.order.address.Address;
 import com.computeralchemist.store.repository.OrderRepository;
 import com.computeralchemist.store.repository.StoreRepository;
 import org.springframework.dao.EmptyResultDataAccessException;
@@ -41,10 +41,11 @@ public class OrderController {
     @ResponseStatus(HttpStatus.CREATED)
     public Order postCartAndPlaceOrder(@PathVariable("storeName") String storeName,
                                        @RequestBody Cart cart) {
-        if (storeValidator.isStoreExist(storeName))
+
+         if (storeValidator.isStoreExist(cart.getStoreName()))
             return orderCreator.create(cart);
 
-        else throw new EmptyResultDataAccessException(0);
+         else throw new EmptyResultDataAccessException(0);
     }
 
     @GetMapping

@@ -1,9 +1,8 @@
 package com.computeralchemist.store.controller;
 
-import com.computeralchemist.store.domain.store.InvalidStoreData;
-import com.computeralchemist.store.domain.store.components.ComputerComponent;
-import com.computeralchemist.store.domain.store.components.cpu.Cpu;
-import com.computeralchemist.store.domain.store.order.Offered;
+import com.computeralchemist.store.domain.InvalidStoreData;
+import com.computeralchemist.store.domain.components.cpu.Cpu;
+import com.computeralchemist.store.domain.order.Offered;
 import com.computeralchemist.store.repository.OfferedRepository;
 import com.computeralchemist.store.repository.StoreRepository;
 import org.springframework.dao.EmptyResultDataAccessException;

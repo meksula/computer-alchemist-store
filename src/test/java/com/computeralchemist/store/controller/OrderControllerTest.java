@@ -1,8 +1,10 @@
 package com.computeralchemist.store.controller;
 
-import com.computeralchemist.store.domain.store.Store;
-import com.computeralchemist.store.domain.store.order.Cart;
-import com.computeralchemist.store.domain.store.order.Order;
+import com.computeralchemist.store.domain.Store;
+import com.computeralchemist.store.domain.order.Cart;
+import com.computeralchemist.store.domain.order.Order;
+import com.computeralchemist.store.domain.order.OrderedProduct;
+import com.computeralchemist.store.domain.order.address.Address;
 import com.computeralchemist.store.repository.OrderRepository;
 import com.computeralchemist.store.repository.StoreRepository;
 import com.fasterxml.jackson.core.JsonProcessingException;
@@ -24,10 +26,12 @@ import org.springframework.test.web.servlet.MockMvc;
 import org.springframework.test.web.servlet.setup.MockMvcBuilders;
 import org.springframework.web.context.WebApplicationContext;
 
+import java.io.IOException;
 import java.nio.charset.Charset;
-import java.util.Arrays;
-import java.util.HashSet;
+import java.util.*;
 
+import static junit.framework.TestCase.assertEquals;
+import static junit.framework.TestCase.assertNotNull;
 import static org.hamcrest.Matchers.hasSize;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.get;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.post;
@@ -68,6 +72,7 @@ public class OrderControllerTest {
     private static final String STORE_NAME = "Computer from Heaven";
     private final long CUSTOMER_ID = 38294;
     private final String CUSTOMER_USERNAME = "niko_kopernik1492";
+    private final String ADDRESS = "Some kind of address";
 
     private final long USER_ID = 3432;
     private final String USERNAME = "heaven_comp83";
@@ -112,13 +117,34 @@ public class OrderControllerTest {
 
     private String orderJson() throws JsonProcessingException {
         Cart cart = new Cart();
+        cart.setFetchCustomerDataFromCa(false);
         cart.setCustomerUserId(CUSTOMER_ID);
         cart.setCustomerUsername(CUSTOMER_USERNAME);
         cart.setStoreId(STORE_ID);
         cart.setStoreName(STORE_NAME);
-        cart.setProductInCart(new HashSet<>());
+
+        Address address = new Address();
+        address.setCity("Lublin");
+        address.setCountry("Poland");
+        address.setZipCode("21-313");
+        address.setHouseNumber("324");
+        cart.setAddress(address);
+
+        Set<OrderedProduct> orderedProducts = new LinkedHashSet<>();
+        OrderedProduct orderedProduct = new OrderedProduct();
+        orderedProducts.add(orderedProduct);
+
+        cart.setProductInCart(orderedProducts);
 
         return new ObjectMapper().writeValueAsString(cart);
+    }
+
+    @Test
+    public void deserializeTest() throws IOException {
+        ObjectMapper objectMapper = new ObjectMapper();
+        Cart cart = objectMapper.readValue(orderJson(), Cart.class);
+        assertNotNull(cart);
+        assertEquals(1, cart.getProductInCart().size());
     }
 
     @Test
@@ -133,20 +159,30 @@ public class OrderControllerTest {
                 .andExpect(jsonPath("$", hasSize(1)));
     }
 
-    private void saveOrder() {
+    private Order saveOrder() {
         Order order = new Order();
         order.setCustomersId(CUSTOMER_ID);
         order.setCustomersUsername(CUSTOMER_USERNAME);
         order.setStoreId(STORE_ID);
         order.setStoreName(STORE_NAME);
+
+        Address address = new Address();
+        address.setCity("Lublin");
+        address.setCountry("Poland");
+        address.setZipCode("21-313");
+        address.setHouseNumber("324");
+
+        order.setAddress(address.toString());
         order.setProductList(new HashSet<>());
 
         orderRepository.save(order);
+        return order;
     }
 
-    @After
+    /*@After
     public void cleanUp() {
         orderRepository.deleteAll();
-    }
+        storeRepository.deleteAll();
+    }*/
 
 }

@@ -1,7 +1,7 @@
 package com.computeralchemist.store.controller;
 
 
-import com.computeralchemist.store.domain.store.InvalidStoreData;
+import com.computeralchemist.store.domain.InvalidStoreData;
 import org.springframework.dao.EmptyResultDataAccessException;
 import org.springframework.http.HttpStatus;
 import org.springframework.transaction.TransactionSystemException;

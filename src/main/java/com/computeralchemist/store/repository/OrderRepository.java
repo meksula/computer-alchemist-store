@@ -1,6 +1,6 @@
 package com.computeralchemist.store.repository;
 
-import com.computeralchemist.store.domain.store.order.Order;
+import com.computeralchemist.store.domain.order.Order;
 import org.springframework.data.repository.CrudRepository;
 
 import javax.transaction.Transactional;

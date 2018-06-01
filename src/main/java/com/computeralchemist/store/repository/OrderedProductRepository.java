@@ -1,6 +1,6 @@
 package com.computeralchemist.store.repository;
 
-import com.computeralchemist.store.domain.store.order.OrderedProduct;
+import com.computeralchemist.store.domain.order.OrderedProduct;
 import org.springframework.data.jpa.repository.JpaRepository;
 
 /**

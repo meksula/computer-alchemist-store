@@ -1,8 +1,8 @@
 package com.computeralchemist.store.controller;
 
-import com.computeralchemist.store.domain.store.Store;
-import com.computeralchemist.store.domain.store.components.ComponentType;
-import com.computeralchemist.store.domain.store.order.Offered;
+import com.computeralchemist.store.domain.Store;
+import com.computeralchemist.store.domain.components.ComponentType;
+import com.computeralchemist.store.domain.order.Offered;
 import com.computeralchemist.store.repository.OfferedRepository;
 import com.computeralchemist.store.repository.StoreRepository;
 import com.fasterxml.jackson.core.JsonProcessingException;

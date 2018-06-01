@@ -1,6 +1,6 @@
 package com.computeralchemist.store.repository.history;
 
-import com.computeralchemist.store.domain.store.order.Order;
+import com.computeralchemist.store.domain.order.Order;
 
 import java.util.List;
 

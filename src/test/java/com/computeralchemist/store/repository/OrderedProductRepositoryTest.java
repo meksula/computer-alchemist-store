@@ -1,8 +1,7 @@
 package com.computeralchemist.store.repository;
 
-import com.computeralchemist.store.domain.store.order.Order;
-import com.computeralchemist.store.domain.store.order.OrderedProduct;
-import org.junit.After;
+import com.computeralchemist.store.domain.order.Order;
+import com.computeralchemist.store.domain.order.OrderedProduct;
 import org.junit.Test;
 import org.junit.runner.RunWith;
 import org.springframework.beans.factory.annotation.Autowired;

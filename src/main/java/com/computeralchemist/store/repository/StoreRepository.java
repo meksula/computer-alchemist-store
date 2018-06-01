@@ -1,6 +1,6 @@
 package com.computeralchemist.store.repository;
 
-import com.computeralchemist.store.domain.store.Store;
+import com.computeralchemist.store.domain.Store;
 import org.springframework.data.repository.CrudRepository;
 
 import java.util.Optional;

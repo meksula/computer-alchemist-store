@@ -1,7 +1,7 @@
 package com.computeralchemist.store.repository;
 
-import com.computeralchemist.store.domain.store.order.Order;
-import com.computeralchemist.store.domain.store.order.OrderedProduct;
+import com.computeralchemist.store.domain.order.Order;
+import com.computeralchemist.store.domain.order.OrderedProduct;
 import lombok.extern.slf4j.Slf4j;
 import org.junit.*;
 import org.junit.runner.RunWith;

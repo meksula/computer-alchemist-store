@@ -1,9 +1,14 @@
 package com.computeralchemist.store.controller;
 
-import com.computeralchemist.store.domain.store.InvalidStoreData;
-import com.computeralchemist.store.domain.store.Store;
-import com.computeralchemist.store.domain.store.StoreValidator;
+import com.computeralchemist.store.domain.InvalidStoreData;
+import com.computeralchemist.store.domain.Store;
+import com.computeralchemist.store.domain.StoreValidator;
+import com.computeralchemist.store.domain.order.Cart;
+import com.computeralchemist.store.domain.order.DefaultOrderCreator;
+import com.computeralchemist.store.domain.order.Order;
 import com.computeralchemist.store.repository.StoreRepository;
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.dao.EmptyResultDataAccessException;
 import org.springframework.data.rest.webmvc.ResourceNotFoundException;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;

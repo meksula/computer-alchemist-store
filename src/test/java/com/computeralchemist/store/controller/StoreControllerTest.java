@@ -1,6 +1,6 @@
 package com.computeralchemist.store.controller;
 
-import com.computeralchemist.store.domain.store.Store;
+import com.computeralchemist.store.domain.Store;
 import com.computeralchemist.store.repository.StoreRepository;
 import com.fasterxml.jackson.core.JsonProcessingException;
 import com.fasterxml.jackson.databind.ObjectMapper;
@@ -124,6 +124,8 @@ public class StoreControllerTest {
     public void cleanUp() {
         storeRepository.deleteAll();
     }
+
+
 
 }
 

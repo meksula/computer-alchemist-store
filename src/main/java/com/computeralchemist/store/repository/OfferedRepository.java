@@ -1,7 +1,7 @@
 package com.computeralchemist.store.repository;
 
-import com.computeralchemist.store.domain.store.components.ComponentType;
-import com.computeralchemist.store.domain.store.order.Offered;
+import com.computeralchemist.store.domain.components.ComponentType;
+import com.computeralchemist.store.domain.order.Offered;
 import org.springframework.data.repository.CrudRepository;
 
 import java.util.List;

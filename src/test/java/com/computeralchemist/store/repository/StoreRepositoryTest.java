@@ -1,6 +1,6 @@
 package com.computeralchemist.store.repository;
 
-import com.computeralchemist.store.domain.store.Store;
+import com.computeralchemist.store.domain.Store;
 import org.junit.*;
 import org.junit.runner.RunWith;
 import org.junit.runners.MethodSorters;

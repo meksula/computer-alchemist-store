@@ -1,7 +1,6 @@
 package com.computeralchemist.store.repository.history;
 
-import com.computeralchemist.store.domain.store.order.Order;
-import org.springframework.dao.EmptyResultDataAccessException;
+import com.computeralchemist.store.domain.order.Order;
 import org.springframework.jdbc.core.JdbcOperations;
 import org.springframework.stereotype.Repository;
 
