@@ -80,6 +80,9 @@ public class OrderControllerTest {
     private final String PHONE = "2432-3344-22";
     private final String ACCOUNT = "22843722334234444499330344";
     private final String DESCRIPTION = "Our computers store is here from heaven to happy all people in the world.";
+    private final String CUSTOMERNAME = "Mikołaj";
+    private final String CUSTOMER_SURNAME = "Kopernik";
+    private final String CUSTOMER_EMAIL = "kopernik.m@gmail.com";
 
     private Store store;
 
@@ -117,11 +120,14 @@ public class OrderControllerTest {
 
     private String orderJson() throws JsonProcessingException {
         Cart cart = new Cart();
-        cart.setFetchCustomerDataFromCa(false);
+        cart.setFetchCustomerDataFromDatabase(false);
         cart.setCustomerUserId(CUSTOMER_ID);
         cart.setCustomerUsername(CUSTOMER_USERNAME);
         cart.setStoreId(STORE_ID);
         cart.setStoreName(STORE_NAME);
+        cart.setCustomerEmail(CUSTOMER_EMAIL);
+        cart.setCustomerName(CUSTOMERNAME);
+        cart.setCustomerSurname(CUSTOMER_SURNAME);
 
         Address address = new Address();
         address.setCity("Lublin");
@@ -179,10 +185,10 @@ public class OrderControllerTest {
         return order;
     }
 
-    /*@After
+    @After
     public void cleanUp() {
         orderRepository.deleteAll();
         storeRepository.deleteAll();
-    }*/
+    }
 
 }

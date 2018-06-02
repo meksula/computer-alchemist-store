@@ -41,17 +41,12 @@ public class Order {
     @NotNull
     private String address;
 
-    //added
+    private String customerEmail;
 
-    @Transient
-    private String email;
-
-    /**
-     * Te wartości trzeba dodać w jakiś sensowny sposób. Oddzielna klasa, która załaduje te dane.*/
     private String orderPlaceDate;
-    private String name;
-    private String surname;
-    private String price;
+    private String customerName;
+    private String customerSurname;
+    private String totalPrice;
     private String accountNumber;
 
     @Transient

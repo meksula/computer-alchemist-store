@@ -1,7 +1,6 @@
 package com.computeralchemist.store.domain.order.realization;
 
 import com.computeralchemist.store.domain.order.Order;
-import org.springframework.mail.MailMessage;
 import org.springframework.mail.SimpleMailMessage;
 import org.springframework.mail.javamail.JavaMailSender;
 import org.springframework.mail.javamail.MimeMessageHelper;
@@ -43,13 +42,13 @@ public class MailSenderImpl implements MailSender {
         MimeMessageHelper messageHelper = new MimeMessageHelper(mimeMessage, "UTF-8");
 
         Context context = new Context();
-        context.setVariable("customerName", order.getName());
-        context.setVariable("customerSurname", order.getSurname());
+        context.setVariable("customerName", order.getCustomerName());
+        context.setVariable("customerSurname", order.getCustomerSurname());
         context.setVariable("address", order.getAddress());
 
         context.setVariable("storeName", order.getStoreName());
         context.setVariable("orderId", order.getOrderId());
-        context.setVariable("price", order.getPrice());
+        context.setVariable("price", order.getTotalPrice());
         context.setVariable("accountNumber", order.getAccountNumber());
 
         context.setVariable("products", order.getProductList());
@@ -58,8 +57,7 @@ public class MailSenderImpl implements MailSender {
 
         try {
             messageHelper.setSubject("Computer alchemist order confirmation");
-            messageHelper.setFrom("computer.alchemist.store@gmail.com");
-            messageHelper.setTo(order.getEmail());
+            messageHelper.setTo(order.getCustomerEmail());
             messageHelper.setText(htmlContent, true);
         } catch (MessagingException e) {
             e.printStackTrace();

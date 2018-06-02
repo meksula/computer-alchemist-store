@@ -20,13 +20,16 @@ import java.util.Set;
 public class Cart implements Serializable {
     private long customerUserId;
     private String customerUsername;
+    private String customerName;
+    private String customerSurname;
+    private String customerEmail;
 
     /**
-     * @param fetchCustomerDataFromCa determines that customer allowed to get data from the Computer Alchemist database.
+     * @param fetchCustomerDataFromDatabase determines that storeholder is allowed to get data from the Computer Alchemist database.
      * if is true - get data from Computer Alchemist database.
      * if is false - customer has to type data by hand.
      * */
-    private boolean fetchCustomerDataFromCa;
+    private boolean fetchCustomerDataFromDatabase;
     private Address address;
 
     private long storeId;

@@ -38,6 +38,7 @@ public class OrderRepositoryTest {
     private final String CUSTOMER_USERNAME = "Mikolaj_Kopernik1492";
     private final long STORE_ID = 4533;
     private final String STORE_NAME = "Computer Alchemist Official";
+    private final String ADDRESS = "Lublin, Lubelska 192";
 
     @Before
     public void setUp() {
@@ -65,6 +66,7 @@ public class OrderRepositoryTest {
         order.setCustomersUsername(CUSTOMER_USERNAME);
         order.setStoreId(STORE_ID);
         order.setStoreName(STORE_NAME);
+        order.setAddress(ADDRESS);
 
         Order order1 = orderRepository.save(order);
         assignedId = order1.getOrderId();
@@ -92,6 +94,7 @@ public class OrderRepositoryTest {
         order.setCustomersUsername(CUSTOMER_USERNAME);
         order.setStoreId(STORE_ID);
         order.setStoreName(STORE_NAME);
+        order.setAddress(ADDRESS);
         order.setProductList(provideSet());
 
         Order optionalOrder = orderRepository.save(order);
@@ -125,6 +128,7 @@ public class OrderRepositoryTest {
         order2.setCustomersUsername(CUSTOMER_USERNAME);
         order2.setStoreId(STORE_ID);
         order2.setStoreName(STORE_NAME);
+        order2.setAddress(ADDRESS);
 
         orderRepository.save(order2);
     }

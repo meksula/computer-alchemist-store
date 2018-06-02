@@ -1,8 +1,5 @@
 package com.computeralchemist.store.domain.order;
 
-import com.fasterxml.jackson.core.JsonProcessingException;
-import com.fasterxml.jackson.databind.ObjectMapper;
-
 /**
  * @Author
  * Karol Meksuła
@@ -19,18 +16,18 @@ public abstract class OrderCreator {
         if (!validateCart())
             throw new EmptyCartException();
 
-        this.order = createOrder();
-        setAddress();
+        order = createOrder();
         setClientData();
         setStoreData();
-        this.order = saveOrder();
+        sumOfPrices();
+        order = saveOrder();
         setProductCollection();
         sendEmail();
 
         return this.order;
     }
 
-    protected abstract void setAddress();
+    protected abstract void sumOfPrices();
 
     private boolean validateCart() {
         return new CartValidator().validateCart(this.cart);

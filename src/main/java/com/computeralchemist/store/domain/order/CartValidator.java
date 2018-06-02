@@ -9,7 +9,7 @@ package com.computeralchemist.store.domain.order;
 public class CartValidator {
 
     public boolean validateCart(Cart cart) {
-        if (cart.isFetchCustomerDataFromCa() && cart.getAddress() == null)
+        if (cart.isFetchCustomerDataFromDatabase() && cart.getAddress() == null)
             return true;
 
         else if (cart.getAddress() != null)

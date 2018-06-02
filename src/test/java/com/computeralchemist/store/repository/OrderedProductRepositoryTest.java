@@ -2,6 +2,9 @@ package com.computeralchemist.store.repository;
 
 import com.computeralchemist.store.domain.order.Order;
 import com.computeralchemist.store.domain.order.OrderedProduct;
+import org.junit.After;
+import org.junit.AfterClass;
+import org.junit.Before;
 import org.junit.Test;
 import org.junit.runner.RunWith;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -24,6 +27,7 @@ public class OrderedProductRepositoryTest {
     private final String CUSTOMER_USERNAME = "Mikolaj_Kopernik1492";
     private final long STORE_ID = 4533;
     private final String STORE_NAME = "Computer Alchemist Official";
+    private final String ADDRESS = "Lublin, Lubelska 192";
 
     @Autowired
     private OrderedProductRepository orderedProductRepository;
@@ -31,14 +35,21 @@ public class OrderedProductRepositoryTest {
     @Autowired
     private OrderRepository orderRepository;
 
-    private Order order;
+    private static Order order;
+
+    @Before
+    public void setUp() {
+        orderRepository.deleteAll();
+        orderedProductRepository.deleteAll();
+    }
 
     private void initOrder() {
-        this.order = new Order();
+        order = new Order();
         order.setCustomersId(CUSTOMER_ID);
         order.setCustomersUsername(CUSTOMER_USERNAME);
         order.setStoreId(STORE_ID);
         order.setStoreName(STORE_NAME);
+        order.setAddress(ADDRESS);
 
         orderRepository.save(order);
     }
@@ -61,9 +72,15 @@ public class OrderedProductRepositoryTest {
         initOrder();
         saveFiewOrderedProduct();
 
-        orderRepository.deleteAllByOrderId(1);
+        orderRepository.deleteAllByOrderId(order.getOrderId());
 
         assertEquals(0, orderedProductRepository.findAll().size());
+    }
+
+    @After
+    public void cleanUp() {
+        orderedProductRepository.deleteAll();
+        orderRepository.deleteAll();
     }
 
 }

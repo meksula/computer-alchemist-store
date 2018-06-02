@@ -6,6 +6,7 @@ import lombok.Setter;
 
 import javax.persistence.*;
 import java.io.Serializable;
+import java.math.BigDecimal;
 
 @Setter
 @Getter
@@ -26,4 +27,5 @@ public class OrderedProduct implements Serializable {
     private String usernamePlacingOrder;
 
     private long offeredId;
+    private BigDecimal price;
 }
