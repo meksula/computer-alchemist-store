@@ -2,9 +2,9 @@ package com.computeralchemist.store.domain.order.realization;
 
 import com.computeralchemist.store.domain.order.Order;
 import com.computeralchemist.store.repository.OrderRepository;
-import com.computeralchemist.store.repository.OrderedProductRepository;
 import com.computeralchemist.store.repository.history.HistoryRepository;
 import org.springframework.dao.EmptyResultDataAccessException;
+import org.springframework.stereotype.Service;
 
 import java.util.List;
 import java.util.Optional;
@@ -15,25 +15,24 @@ import java.util.Optional;
  * 29-05-2018
  * */
 
-public abstract class OrderRealizationTemplateMethod {
+@Service
+public class OrderRealizationTemplateMethod implements OrderRealization {
     private OrderRepository orderRepository;
-    private OrderedProductRepository orderedProductRepository;
     private HistoryRepository historyRepository;
     private MailSender mailSender;
-    protected Order order;
+    private Order order;
     private String storeName;
     private long orderId;
 
     public OrderRealizationTemplateMethod(OrderRepository orderRepository,
                                           HistoryRepository historyRepository,
-                                          OrderedProductRepository orderedProductRepository,
                                           MailSender mailSender) {
         this.orderRepository = orderRepository;
         this.historyRepository = historyRepository;
-        this.orderedProductRepository = orderedProductRepository;
         this.mailSender = mailSender;
     }
 
+    @Override
     public final Order realizeOrder(String storeName, long orderId) {
         this.storeName = storeName;
         this.orderId = orderId;
@@ -63,7 +62,9 @@ public abstract class OrderRealizationTemplateMethod {
 
     }
 
-    protected abstract void postEmailToCustomer();
+    private void postEmailToCustomer() {
+        mailSender.postShipmentConfirmation(order);
+    }
 
     private void deleteFromCurrentOrders() {
         orderRepository.delete(order);

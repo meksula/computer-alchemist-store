@@ -2,8 +2,8 @@ package com.computeralchemist.store.controller;
 
 import com.computeralchemist.store.domain.StoreValidator;
 import com.computeralchemist.store.domain.order.*;
+import com.computeralchemist.store.domain.order.realization.OrderRealizationTemplateMethod;
 import com.computeralchemist.store.repository.OrderRepository;
-import com.computeralchemist.store.repository.StoreRepository;
 import org.springframework.dao.EmptyResultDataAccessException;
 import org.springframework.http.HttpStatus;
 import org.springframework.web.bind.annotation.*;
@@ -21,18 +21,18 @@ import java.util.Optional;
 @RequestMapping("/store/order/{storeName}")
 public class OrderController {
     private OrderRepository orderRepository;
-    private StoreRepository storeRepository;
     private OrderCreator orderCreator;
     private StoreValidator storeValidator;
+    private OrderRealizationTemplateMethod orderRealizationTemplateMethod;
 
     public OrderController(OrderRepository orderRepository,
-                           StoreRepository storeRepository,
                            OrderCreator orderCreator,
-                           StoreValidator storeValidator) {
+                           StoreValidator storeValidator,
+                           OrderRealizationTemplateMethod orderRealizationTemplateMethod) {
         this.orderRepository = orderRepository;
         this.orderCreator = orderCreator;
-        this.storeRepository = storeRepository;
         this.storeValidator = storeValidator;
+        this.orderRealizationTemplateMethod = orderRealizationTemplateMethod;
     }
 
     @PostMapping
@@ -57,18 +57,12 @@ public class OrderController {
         else throw new EmptyResultDataAccessException(0);
     }
 
-    /**
-     * Poniższy endpoint ma:
-     * - wysyłać maila do klienta, że zrealizowano zamówienie;
-     * - przenosić zamówienie do historii (JDBC template)
-     *
-     * */
-
     @PostMapping(value = "/{orderId}")
     @ResponseStatus(HttpStatus.OK)
     public Order completeOrder(@PathVariable("storeName") String storeName,
                                @PathVariable("orderId") Long orderId) {
-        return null;
+
+        return orderRealizationTemplateMethod.realizeOrder(storeName, orderId);
     }
 
 }

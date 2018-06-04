@@ -12,7 +12,11 @@ import org.springframework.dao.EmptyResultDataAccessException;
 import org.springframework.data.rest.webmvc.ResourceNotFoundException;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
+import org.springframework.security.access.prepost.PreAuthorize;
+import org.springframework.security.core.Authentication;
 import org.springframework.web.bind.annotation.*;
+
+import java.security.Principal;
 
 /**
  * @Author
@@ -40,10 +44,12 @@ public class StoreController {
         else throw new InvalidStoreData();
     }
 
+    //@PreAuthorize("hasRole('ADMIN')")
     @GetMapping(path = "/{storeId}")
     @ResponseStatus(HttpStatus.OK)
     public Store findStore(@PathVariable("storeId") long storeId) {
-       return storeRepository.findById(storeId).orElseThrow(ResourceNotFoundException::new);
+
+        return storeRepository.findById(storeId).orElseThrow(ResourceNotFoundException::new);
     }
 
     @DeleteMapping(path = "/{storeId}")

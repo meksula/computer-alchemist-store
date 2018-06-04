@@ -66,6 +66,14 @@ public class StoreOfferController {
 
         else throw new EmptyResultDataAccessException(Math.toIntExact(id));
 
+        /**
+         * TODO trzeba to ładnie ułożyć. Konsumowanie zasobów powinno być tylko w jednym miejscu.
+         * Autentykacja powinna być na podstawie UserDetailsService, który będzie powiązany z Computer Alchemist
+         * Wczytywanie linków z properties
+         *
+         * !!!! Nie będę mapował każdego typu osobno. Klasa Offered ma zawierać jakiś komponent
+         * */
+
         RestTemplate restTemplate = new RestTemplate();
         restTemplate.getInterceptors().add(new BasicAuthorizationInterceptor("karoladmin", "karoladmin"));
         computerComponent = restTemplate.getForEntity("http://localhost:8080/components/"
